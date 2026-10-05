@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unity Mastery Tracker | متتبع إتقان Unity</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        obsidian: '#1e1e1e',
+                        vim: '#282c34',
+                        accent: '#BB86FC',
+                        secondary: '#03DAC6',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts for UI -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Tajawal', sans-serif;
+            background-color: #0d1117; /* GitHub Dark Dimmed / Obsidian vibe */
+            color: #c9d1d9;
+        }
+        .card {
+            background-color: #161b22;
+            border: 1px solid #30363d;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0d1117; }
+        ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+        
+        .month-header {
+            background: linear-gradient(90deg, #1e1e1e 0%, #2d3748 100%);
+            border-left: 4px solid #BB86FC;
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8">
+
+<div class="max-w-7xl mx-auto space-y-8">
+    
+    <!-- Header -->
+    <header class="text-center py-8">
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-2 tracking-tight">Unity Mastery Tracking <br><span class="text-accent text-3xl font-normal mt-2 block">متتبع مسار إتقان Unity</span></h1>
+        <p class="text-gray-400 mt-4 max-w-2xl mx-auto">14 Months from Zero to AAA Workflows | 14 شهراً من الصفر إلى احترافية AAA</p>
+    </header>
+
+    <!-- Main Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Left Column: Controls & Insights -->
+        <div class="lg:col-span-1 space-y-6">
+            
+            <!-- Progress Section -->
+            <div class="card p-6 rounded-xl shadow-lg">
+                <h2 class="text-xl font-semibold mb-4 text-white flex justify-between">
+                    <span>Overall Progress</span>
+                    <span class="text-sm font-normal text-gray-400">التقدم العام</span>
+                </h2>
+                <div class="w-full bg-gray-700 rounded-full h-4 mb-2">
+                    <div id="progress-bar" class="bg-accent h-4 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+                <div class="text-right text-sm text-gray-400">
+                    <span id="progress-text">0 / 280 Days (0%)</span>
+                </div>
+            </div>
+
+            <!-- Missing Knowledge Log -->
+            <div class="card p-6 rounded-xl shadow-lg flex flex-col h-[250px]">
+                <h2 class="text-xl font-semibold mb-2 text-white flex justify-between">
+                    <span>Missing Knowledge</span>
+                    <span class="text-sm font-normal text-gray-400">الفجوات المعرفية</span>
+                </h2>
+                <p class="text-xs text-secondary mb-4">Log concepts you didn't fully grasp.</p>
+                <textarea id="knowledge-log" class="w-full flex-grow bg-[#0d1117] border border-gray-600 rounded p-3 text-sm text-white focus:outline-none focus:border-accent resize-none" placeholder="E.g., Still confused about Netcode RPCs..."></textarea>
+            </div>
+
+            <!-- Daily Briefing (OpenRouter + News) -->
+            <div class="card p-6 rounded-xl shadow-lg flex flex-col h-[500px]">
+                <h2 class="text-xl font-semibold mb-2 text-white flex justify-between">
+                    <span>Daily Briefing</span>
+                    <span class="text-sm font-normal text-gray-400">الموجز اليومي</span>
+                </h2>
+                <div class="overflow-y-auto pr-2 space-y-6 mt-4 flex-grow custom-scrollbar">
+                    
+                    <div>
+                        <h3 class="text-secondary text-sm font-bold mb-2 uppercase tracking-wide border-b border-gray-700 pb-1">AI Insight | رؤية الذكاء الاصطناعي</h3>
+                        <div id="ai-insight-content" class="text-sm text-gray-300 leading-relaxed">
+                            Loading daily insight...
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="text-accent text-sm font-bold mb-2 uppercase tracking-wide border-b border-gray-700 pb-1">Community Radar | رادار المجتمع</h3>
+                        <div id="news-feed-content" class="space-y-3">
+                            <span class="text-sm text-gray-400">Loading feeds...</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Right Column: The Curriculum -->
+        <div class="lg:col-span-2 space-y-6">
+            <div class="card p-6 text-sm text-gray-400 rounded-xl mb-4 border-l-4 border-l-secondary">
+                <p class="mb-2"><strong class="text-white">Recommended Sources:</strong> Code Monkey (Netcode), Catlike Coding (Math/Shaders), Dapper Dino (Multiplayer), Brackeys (Zero Knowledge basics).</p>
+                <p>Allocate <strong>2-hour study blocks</strong> per day.</p>
+            </div>
+
+            <div id="curriculum-container" class="space-y-4">
+                <!-- Months and Days injected here via JS -->
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<script>
+    // --- Data Generation Logic ---
+    const TOTAL_MONTHS = 14;
+    const DAYS_PER_MONTH = 20; // Working days per month
+    
+    // Define curriculum phases
+    const PHASES = [
+        {
+            months: [1, 2, 3],
+            titleEn: "Fundamentals & Unity 3D Basics",
+            titleAr: "الأساسيات ومبادئ Unity ثلاثي الأبعاد",
+            topics: [
+                "C# Variables & Data Types", "C# Functions & Control Flow", "C# Classes & OOP Basics",
+                "Unity Interface Navigation", "GameObjects & Transforms", "Components & Prefabs",
+                "Basic Movement Scripting", "Input System (Old vs New)", "Colliders & Triggers",
+                "Rigidbodies & Physics", "Managing Audio in Unity", "Basic UI Canvas & Buttons",
+                "Coroutines & Subroutines", "ScriptableObjects Introduction", "Building and Executing"
+            ]
+        },
+        {
+            months: [4, 5, 6],
+            titleEn: "Advanced Physics, AI & UI/UX",
+            titleAr: "فيزياء متقدمة، ذكاء اصطناعي، وواجهة المستخدم",
+            topics: [
+                "Advanced Raycasting", "Character Controllers vs Rigidbody", "NavMesh Baking & Agents",
+                "Finite State Machines (FSM)", "Animator Controllers & Blends", "Inverse Kinematics (IK) Basics",
+                "Advanced UI Elements & Layouts", "UI Animations (DOTween)", "Event System & Interfaces",
+                "Data Persistence (PlayerPrefs/JSON)", "Scene Management & Loading Async", "Object Pooling Pattern"
+            ]
+        },
+        {
+            months: [7, 8, 9],
+            titleEn: "Online Multiplayer & Backend",
+            titleAr: "اللعب الجماعي عبر الإنترنت والواجهة الخلفية",
+            topics: [
+                "Networking Concepts (Host, Client, Server)", "Unity Netcode for GameObjects (NGO)", "Mirror Networking Basics",
+                "RPCs (Remote Procedure Calls)", "Network Variables & Syncing State", "Client-side Prediction & Interpolation",
+                "Lobby Systems & Matchmaking", "Relay Servers vs Dedicated", "Database Connections (Firebase/Supabase)",
+                "User Authentication", "Leaderboards & Cloud Saving", "Server Authority & Anti-Cheat Basics"
+            ]
+        },
+        {
+            months: [10, 11, 12],
+            titleEn: "Graphics, Shaders & Optimization",
+            titleAr: "الرسوميات، التظليل، والتحسين",
+            topics: [
+                "URP vs HDRP Setup", "Post-Processing Stack", "Lighting: Baked vs Realtime",
+                "Light Probes & Reflection Probes", "Shader Graph Fundamentals", "Visual Effect Graph (VFX)",
+                "Custom HLSL Basics", "Profiler Deep Dive", "Memory Management & Garbage Collection",
+                "Occlusion Culling & LODs", "Batching (Static/Dynamic & SRP Batcher)", "Optimizing Draw Calls"
+            ]
+        },
+        {
+            months: [13, 14],
+            titleEn: "Studio Ops & Portfolio (Saudi Industry)",
+            titleAr: "إدارة الأستوديو ومعرض الأعمال",
+            topics: [
+                "Version Control (Git/Plastic SCM) in Teams", "CI/CD Pipelines for Unity", "Agile & Jira for Game Dev",
+                "Code Architecture (SOLID, MVP)", "Creating a Professional Showreel", "Preparing for Saudi Game Studio Interviews",
+                "Steamworks & Publishing", "Localization Strategies", "Marketing & Community Building",
+                "Writing Design Documents (GDD)"
+            ]
+        }
+    ];
+
+    let curriculum = [];
+
+    // Generate JSON curriculum
+    for (let m = 1; m <= TOTAL_MONTHS; m++) {
+        let phase = PHASES.find(p => p.months.includes(m));
+        let monthObj = {
+            month: m,
+            titleEn: `Month ${m} - ${phase.titleEn}`,
+            titleAr: `الشهر ${m} - ${phase.titleAr}`,
+            days: []
+        };
+        
+        for (let d = 1; d <= DAYS_PER_MONTH; d++) {
+            let overallDay = ((m - 1) * DAYS_PER_MONTH) + d;
+            let topicIndex = (overallDay - 1) % phase.topics.length;
+            let currentTopic = phase.topics[topicIndex];
+            
+            let source = "Brackeys / Official Docs";
+            if(m <= 3) source = "Brackeys / Code Monkey";
+            if(m >= 4 && m <= 6) source = "Code Monkey / Game Dev Guide";
+            if(m >= 7 && m <= 9) source = "Dapper Dino / Code Monkey (Netcode)";
+            if(m >= 10 && m <= 12) source = "Catlike Coding / Freya Holmér";
+            if(m >= 13) source = "GDC Talks / Code Monkey";
+
+            monthObj.days.push({
+                dayNumber: overallDay,
+                topic: currentTopic,
+                youtubePlaceholder: `Search: "${currentTopic} ${source.split('/')[0].trim()}"`,
+                source: source
+            });
+        }
+        curriculum.push(monthObj);
+    }
+
+    // --- UI Render ---
+    const container = document.getElementById('curriculum-container');
+    let completedDays = JSON.parse(localStorage.getItem('unityCompletedDays') || '[]');
+
+    function renderCurriculum() {
+        container.innerHTML = '';
+        curriculum.forEach(m => {
+            let monthEl = document.createElement('div');
+            monthEl.className = 'card rounded-xl overflow-hidden mb-4';
+            
+            // Header
+            let header = document.createElement('div');
+            header.className = 'month-header p-4 cursor-pointer flex justify-between items-center text-white';
+            header.innerHTML = `
+                <div class="font-bold">
+                    <div class="text-lg">${m.titleEn}</div>
+                    <div class="text-sm font-normal text-gray-300 mt-1">${m.titleAr}</div>
+                </div>
+                <div class="text-xl opacity-75">▼</div>
+            `;
+            
+            let daysContainer = document.createElement('div');
+            // Hide by default
+            daysContainer.className = 'flex-col divide-y divide-[#30363d] hidden';
+            
+            header.onclick = () => {
+                daysContainer.classList.toggle('hidden');
+                daysContainer.classList.toggle('flex');
+            };
+
+            m.days.forEach(d => {
+                let isCompleted = completedDays.includes(d.dayNumber);
+                let bgClass = isCompleted ? 'bg-[#1e2924] bg-opacity-75' : 'hover:bg-[#1a2029] bg-transparent';
+                
+                let dayEl = document.createElement('div');
+                dayEl.className = `p-4 flex items-start gap-4 transition-colors duration-200 border-l-[3px] border-transparent ${bgClass}`;
+                dayEl.id = `day-row-${d.dayNumber}`;
+                
+                dayEl.innerHTML = `
+                    <div class="mt-1">
+                        <input type="checkbox" class="w-5 h-5 rounded border-gray-600 appearance-none checked:bg-secondary cursor-pointer border relative checked:after:content-['✓'] checked:after:absolute checked:after:text-black checked:after:font-black checked:after:left-[3px] checked:after:top-[-2px]" 
+                            ${isCompleted ? 'checked' : ''} 
+                            onchange="toggleDay(${d.dayNumber}, this)">
+                    </div>
+                    <div class="flex-grow">
+                        <div class="flex justify-between items-start">
+                            <h4 class="text-white font-semibold flex items-center gap-2">
+                                Day ${d.dayNumber}: ${d.topic}
+                            </h4>
+                            <span class="text-xs bg-[#0d1117] text-gray-400 px-2 py-1 rounded border border-gray-700">2 Hrs</span>
+                        </div>
+                        <div class="mt-2 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6">
+                            <p class="text-xs text-secondary flex items-center gap-1">📺 <a href="https://www.youtube.com/results?search_query=${encodeURIComponent(d.topic + ' ' + d.source.split('/')[0].trim())}" target="_blank" class="hover:underline">${d.youtubePlaceholder}</a></p>
+                            <p class="text-xs text-gray-500 flex items-center gap-1">📘 ${d.source}</p>
+                        </div>
+                    </div>
+                `;
+                daysContainer.appendChild(dayEl);
+            });
+
+            monthEl.appendChild(header);
+            monthEl.appendChild(daysContainer);
+            container.appendChild(monthEl);
+        });
+        
+        updateProgress();
+    }
+
+    // --- State Management ---
+    window.toggleDay = function(dayNumber, checkbox) {
+        if (checkbox.checked) {
+            if (!completedDays.includes(dayNumber)) completedDays.push(dayNumber);
+        } else {
+            completedDays = completedDays.filter(d => d !== dayNumber);
+        }
+        localStorage.setItem('unityCompletedDays', JSON.stringify(completedDays));
+        
+        const row = document.getElementById(`day-row-${dayNumber}`);
+        if(checkbox.checked) {
+            row.classList.remove('hover:bg-[#1a2029]', 'bg-transparent');
+            row.classList.add('bg-[#1e2924]', 'bg-opacity-75');
+        } else {
+            row.classList.add('hover:bg-[#1a2029]', 'bg-transparent');
+            row.classList.remove('bg-[#1e2924]', 'bg-opacity-75');
+        }
+        
+        updateProgress();
+    };
+
+    function updateProgress() {
+        const total = TOTAL_MONTHS * DAYS_PER_MONTH;
+        const current = completedDays.length;
+        const percentage = total === 0 ? 0 : Math.round((current / total) * 100);
+        
+        document.getElementById('progress-bar').style.width = `${percentage}%`;
+        document.getElementById('progress-text').innerText = `${current} / ${total} Days (${percentage}%)`;
+    }
+
+    // Missing Knowledge Logic
+    const knowledgeLog = document.getElementById('knowledge-log');
+    knowledgeLog.value = localStorage.getItem('unityKnowledgeLog') || '';
+    knowledgeLog.addEventListener('input', (e) => {
+        localStorage.setItem('unityKnowledgeLog', e.target.value);
+    });
+
+    // Fetch Daily Insights and News
+    fetch('data.json')
+        .then(response => {
+            if (!response.ok) throw new Error("No data.json found");
+            return response.json();
+        })
+        .then(data => {
+            if (data.insight) {
+                document.getElementById('ai-insight-content').innerHTML = `<div class="whitespace-pre-wrap">${data.insight}</div>`;
+            }
+            if (data.news && data.news.length > 0) {
+                const limitNews = data.news.slice(0, 5); // display top 5
+                const newsHtml = limitNews.map(item => `
+                    <a href="${item.url}" target="_blank" class="block bg-[#0d1117] p-3 rounded border border-gray-700 hover:border-secondary transition-colors group">
+                        <div class="text-white text-[13px] font-semibold group-hover:text-secondary mb-1 leading-snug">${item.title}</div>
+                        <div class="text-xs text-gray-500 flex justify-between">
+                            <span>${item.source}</span>
+                            <span>${item.date}</span>
+                        </div>
+                    </a>
+                `).join('');
+                document.getElementById('news-feed-content').innerHTML = newsHtml;
+            } else {
+                document.getElementById('news-feed-content').innerHTML = '<span class="text-gray-400 text-sm">No recent news available.</span>';
+            }
+        })
+        .catch(err => {
+            document.getElementById('ai-insight-content').innerHTML = '<span class="text-gray-500 italic text-sm">Failed to load AI Insight (data.json not generated yet).</span>';
+            document.getElementById('news-feed-content').innerHTML = '<span class="text-gray-500 italic text-sm">Failed to load news (data.json not generated yet).</span>';
+        });
+
+    // Initialize all
+    renderCurriculum();
+
+</script>
+</body>
+</html>

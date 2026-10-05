@@ -1,0 +1,19 @@
+{
+  "cars": [
+    "sedan",
+    "taxi",
+    "police",
+    "suv",
+    "van",
+    "hatchback-sports",
+    "delivery",
+    "ambulance",
+    "race",
+    "truck"
+  ],
+  "guns": [
+    "ar",
+    "smg",
+    "dmr"
+  ]
+}

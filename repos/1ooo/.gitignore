@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.assets-src/
+.shots/
+.chrome-*/
+.chrome-smoke.log
+dom*.html
+vite.pid
+.DS_Store
+*.log

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>1ooo — Neon Voxel World</title>
+  </head>
+  <body>
+    <canvas id="view"></canvas>
+    <div id="vignette"></div>
+    <div id="menu" class="hidden">
+      <div class="menu-box">
+        <div class="menu-title">1OOO</div>
+        <div class="menu-sub">NEON VOXEL WORLD</div>
+        <div class="menu-row">
+          <span class="menu-seed-label">SEED <b id="menu-seed">#00000000</b></span>
+          <button id="menu-reroll" class="chip" type="button">REROLL</button>
+        </div>
+        <div class="loadout" id="menu-loadout">
+          <button class="card" data-preset="1" type="button"><b>AR</b><span class="dn">—</span></button>
+          <button class="card" data-preset="2" type="button"><b>SMG</b><span class="dn">—</span></button>
+          <button class="card" data-preset="3" type="button"><b>DMR</b><span class="dn">—</span></button>
+        </div>
+        <div id="menu-pool" class="pool">seed pool idle · 8 slots</div>
+        <button id="menu-play" type="button">DEPLOY</button>
+      </div>
+    </div>
+    <div id="hud">
+      <pre id="hud-stats">booting…</pre>
+      <div id="hud-help">
+        click canvas to capture mouse · <b>WASD</b> move · <b>Shift</b> sprint · <b>Space</b> jump ·
+        <b>F</b> fly · <b>LMB</b> fire · <b>E</b> harvest · <b>Q</b> place · <b>X</b> cycle carry ·
+        <b>1</b>-<b>3</b> loadout · <b>R</b> reseed
+      </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+    <script>
+      if (location.protocol === 'file:') {
+        document.getElementById('hud-stats').textContent =
+          'opened as file:// — run "npm install" then "npm run dev" and open http://localhost:5173';
+      }
+    </script>
+  </body>
+</html>

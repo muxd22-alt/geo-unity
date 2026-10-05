@@ -1,0 +1,27 @@
+{
+  "name": "1ooo",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Browser-based hybrid voxel-action engine - Phase 1 micro-starter",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "node scripts/mesher.test.mjs && node scripts/theme.test.mjs && node scripts/prefabs.test.mjs && node scripts/planet.test.mjs && node scripts/traffic.test.mjs && node scripts/voxelops.test.mjs && node scripts/weapon.test.mjs && node scripts/telemetry.test.mjs",
+    "smoke": "node scripts/smoke.test.mjs",
+    "diag": "node scripts/diag-webgl.mjs",
+    "assets:fetch": "node scripts/fetch-assets.mjs",
+    "assets:import": "node scripts/import-assets.mjs",
+    "gen:model": "python scripts/gen_laya_model.py"
+  },
+  "dependencies": {
+    "onnxruntime-web": "^1.30.0",
+    "three": "0.186.0"
+  },
+  "devDependencies": {
+    "@gltf-transform/core": "^4.5.1",
+    "@gltf-transform/functions": "^4.5.1",
+    "vite": "^8.3.2"
+  }
+}
